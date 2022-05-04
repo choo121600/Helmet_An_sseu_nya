@@ -12,7 +12,7 @@ importlib-metadata==4.11.3
 imutils==0.5.4
 kiwisolver==1.4.2
 Markdown==3.3.6
-matplotlib==3.5.1
+matplotlib==3.5.2
 numpy==1.22.3
 oauthlib==3.2.0
 opencv-python==4.5.5.64
