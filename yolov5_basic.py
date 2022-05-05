@@ -11,6 +11,9 @@ from utils.torch_utils import select_device
 import imutils
 import time # time 라이브러리
 
+from Person.person import Person
+from Bike.bike import Bike
+
 SOURCE = 'yolo Object Detection'
 WEIGHTS = 'yolov5s.pt'
 IMG_SIZE = 640
@@ -36,11 +39,10 @@ colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
 cap= cv2.VideoCapture(0)
 prevTime = 0
 
-prev_per = []
-prev_pho = []
-vector_per= []
-vector_pho= []
 while cap.isOpened():
+    person = Person()
+    bike = Bike()
+
     curTime = time.time()
     ret,img0 = cap.read()
     #img0 = imutils.resize(img0, width=400)
@@ -71,30 +73,20 @@ while cap.isOpened():
         for c in det[:, -1].unique():
             n = (det[:, -1] == c).sum()  # detections per class
             s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-        per_li = []
-        pho_li = []
+            
         for *xyxy, conf, cls in reversed(det):
-            label = f'{names[int(cls)]} {conf:.2f}'
-            if names[int(cls)] == 'person':
-                pe_c1, pe_c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
-                pe_x, pe_y = pe_c1[0] + (pe_c2[0] - pe_c1[0]) / 2, pe_c1[1] + (pe_c2[0] - pe_c1[0]) / 2
-                # print("Person: {} {}".format(pe_x, pe_y))
-                plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
-                per_li.append([pe_x, pe_y])
-                prev_per.append(per_li)
-
-            if names[int(cls)] == "cell phone":
-                po_c1, po_c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
-                po_x, po_y = po_c1[0] + (po_c2[0] - po_c1[0]) / 2, po_c1[1] + (po_c2[0] - po_c1[0]) / 2
-                # print("Phone: {} {}".format(po_c1[0] + (po_c2[0] - po_c1[0]) / 2, po_c1[1] + (po_c2[0] - po_c1[0]) / 2))
-                plot_one_box(xyxy, img0, label=label, color=colors[int(cls)], line_thickness=3)
-                pho_li.append([po_x, po_y])
-                # if prev_per:
-                #     if len(prev_per) > len():
-                # else:
-                #     prev_pho.append(pho_li)
-        print("Person", per_li)
-        print("phone", pho_li)
+            draw_color = colors[int(cls)]
+            detect_name = names[int(cls)]
+            detect_conf = float(conf)
+            person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
+            bike.detect_bike(img0, xyxy, detect_name, draw_color, detect_conf)
+        
+        # print("Person", person.per_li)
+        # print("prev_per", person.prev_per)
+        # print("Phone", bike.pho_li)
+        # print("phone", pho_li)
+    
+    # print("Vector", person.track_person())
     sec = curTime - prevTime
     prevTime = curTime
     fps = 1 / (sec)
