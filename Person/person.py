@@ -9,6 +9,8 @@ from utils.plots2 import plot_one_box
 from utils.torch_utils import select_device
 import imutils
 import time # time 라이브러리
+from settings import *
+from Bike.bike import *
 
 prev_per = []
 
@@ -16,7 +18,20 @@ class Person:
     def __init__(self):
         self.state = "detect"
         self.per_li = []
+        self.bike = Bike()
         self.vector_per = []
+
+    def track_person(self):
+        global prev_per
+        if prev_per != []:
+            for per in self.per_li:
+                for prev in prev_per:
+                    if TRACKING_SPEED[0] < abs(prev[0] - per[0]) < TRACKING_SPEED[1] and TRACKING_SPEED[0] < abs(prev[1] - per[1]) < TRACKING_SPEED[1]:
+                        self.vector_per.append([prev[0] - per[0], prev[1] - per[1]])
+        prev_per = self.per_li
+
+    def check_person(self, vector_per):
+        self.bike.check_bike(vector_per)
 
     def detect_person(self, img0, xyxy, detect_name, draw_color, detect_conf):
         global prev_per
@@ -29,13 +44,6 @@ class Person:
             # print("Person: ", self.per_li)
             # print("Prev: ", prev_per)
             self.track_person()
-        
-    def track_person(self):
-        global prev_per
-        if prev_per != []:
-            for prev in prev_per:
-                for per in self.per_li:
-                    if abs(prev[0] - per[0]) < 50 and abs(prev[1] - per[1]) < 50:
-                        self.vector_per.append([prev[0] - per[0], prev[1] - per[1]])
-                        # print("Vector: ", self.vector_per)
-        prev_per = self.per_li
+        self.bike.detect_bike(img0, xyxy, detect_name, draw_color, detect_conf)
+        if self.vector_per:
+            self.check_person(self.vector_per)

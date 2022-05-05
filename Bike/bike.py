@@ -9,13 +9,29 @@ from utils.plots2 import plot_one_box
 from utils.torch_utils import select_device
 import imutils
 import time # time 라이브러리
+from settings import *
 
 prev_pho = []
-
 class Bike:
     def __init__(self):
         self.state = "detect"
         self.pho_li = []
+        self.vector_pho = []
+
+    def track_bike(self):
+        global prev_pho
+        if prev_pho != []:
+            for pho in self.pho_li:
+                for prev in prev_pho:
+                    if TRACKING_SPEED[0] < abs(prev[0] - pho[0]) < TRACKING_SPEED[1] and TRACKING_SPEED[0] < abs(prev[1] - pho[1]) < TRACKING_SPEED[1]:
+                        self.vector_pho.append([prev[0] - pho[0], prev[1] - pho[1]])
+        prev_pho = self.pho_li
+
+    def check_bike(self, vector_per):
+        if len(vector_per) > 0 and len(self.vector_pho)> 0:
+            print("=============================")
+            print("Per_Vector: ", vector_per)
+            print("Bike_Vec", self.vector_pho)
 
     def detect_bike(self, img0, xyxy, detect_name, draw_color, detect_conf):
         global prev_pho
@@ -25,17 +41,6 @@ class Bike:
             pe_x, pe_y = pe_c1[0] + (pe_c2[0] - pe_c1[0]) / 2, pe_c1[1] + (pe_c2[0] - pe_c1[0]) / 2
             plot_one_box(xyxy, img0, label=label, color=draw_color, line_thickness=3)
             self.pho_li.append([pe_x, pe_y])
-            print("cell Phone: ", self.pho_li)
-            print("Prev: ", prev_pho)
+            # print("cell Phone: ", self.pho_li)
+            # print("Prev: ", prev_pho)
             self.track_bike()
-        
-    def track_bike(self):
-        global prev_pho
-        self.vector_pho = []
-        if prev_pho != []:
-            for pho in self.pho_li:
-                for prev in prev_pho:
-                    if 5 < abs(prev[0] - pho[0]) < 50 and 5 < abs(prev[1] - pho[1]) < 50:
-                        self.vector_pho.append([prev[0] - pho[0], prev[1] - pho[1]])
-                        print("Vector: ", self.vector_pho)
-        prev_pho = self.pho_li

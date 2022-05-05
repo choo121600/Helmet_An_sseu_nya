@@ -41,7 +41,6 @@ prevTime = 0
 
 while cap.isOpened():
     person = Person()
-    bike = Bike()
 
     curTime = time.time()
     ret,img0 = cap.read()
@@ -79,7 +78,6 @@ while cap.isOpened():
             detect_name = names[int(cls)]
             detect_conf = float(conf)
             person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
-            bike.detect_bike(img0, xyxy, detect_name, draw_color, detect_conf)
         
         # print("Person", person.per_li)
         # print("prev_per", person.prev_per)
