@@ -11,30 +11,39 @@ import imutils
 import time # time 라이브러리
 from settings import *
 
+
+#### TODO ####
+"""
+---> Person.detect_person()
+1. 사람이 탐지 되었을 경우, 이륜차 탐지
+2. 사람의 벡터값과 이륜차의 벡터값을 비교
+3. 사람의 벡터값과 이륜차의 벡터값이 유사할 경우, 헬멧 착용여부 확인
+"""
+
 prev_pho = []
+vector_pho = []
 class Bike:
     def __init__(self):
         self.state = "detect"
         self.pho_li = []
-        self.vector_pho = []
 
     def track_bike(self):
-        global prev_pho
+        global prev_pho, vector_pho
         if prev_pho != []:
             for pho in self.pho_li:
                 for prev in prev_pho:
                     if TRACKING_SPEED[0] < abs(prev[0] - pho[0]) < TRACKING_SPEED[1] and TRACKING_SPEED[0] < abs(prev[1] - pho[1]) < TRACKING_SPEED[1]:
-                        self.vector_pho.append([prev[0] - pho[0], prev[1] - pho[1]])
+                        vector_pho.append([prev[0] - pho[0], prev[1] - pho[1]])
         prev_pho = self.pho_li
 
     def check_bike(self, vector_per):
-        if len(vector_per) > 0 and len(self.vector_pho)> 0:
+        if len(vector_per) > 0 and len(vector_pho)> 0:
             print("=============================")
             print("Per_Vector: ", vector_per)
-            print("Bike_Vec", self.vector_pho)
+            print("Bike_Vec", vector_pho)
 
     def detect_bike(self, img0, xyxy, detect_name, draw_color, detect_conf):
-        global prev_pho
+        global prev_pho, vector_pho
         label = detect_name +" "+ str(round(detect_conf, 2))
         if detect_name == 'cell phone':
             pe_c1, pe_c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))

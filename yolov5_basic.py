@@ -78,11 +78,6 @@ while cap.isOpened():
             detect_name = names[int(cls)]
             detect_conf = float(conf)
             person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
-        
-        # print("Person", person.per_li)
-        # print("prev_per", person.prev_per)
-        # print("Phone", bike.pho_li)
-        # print("phone", pho_li)
     
     # print("Vector", person.track_person())
     sec = curTime - prevTime
