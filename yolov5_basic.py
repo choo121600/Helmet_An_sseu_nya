@@ -79,8 +79,12 @@ while cap.isOpened():
             draw_color = colors[int(cls)]
             detect_name = names[int(cls)]
             detect_conf = float(conf)
+<<<<<<< HEAD
             # person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
             bike_fin.detect_bike(img0, xyxy, detect_name, draw_color, detect_conf)
+=======
+            person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
+>>>>>>> e5b891152cfde05e63c7fde3d295b4a385f8771e
     
     sec = curTime - prevTime
     prevTime = curTime
