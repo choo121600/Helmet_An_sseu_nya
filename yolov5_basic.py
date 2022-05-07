@@ -13,6 +13,7 @@ import time # time 라이브러리
 
 from Person.person import Person
 from Bike.bike import Bike
+from Bike.bike_fin import Bike_fin
 
 SOURCE = 'yolo Object Detection'
 WEIGHTS = 'yolov5s.pt'
@@ -41,6 +42,7 @@ prevTime = 0
 
 while cap.isOpened():
     person = Person()
+    bike_fin = Bike_fin()
 
     curTime = time.time()
     ret,img0 = cap.read()
@@ -77,14 +79,9 @@ while cap.isOpened():
             draw_color = colors[int(cls)]
             detect_name = names[int(cls)]
             detect_conf = float(conf)
-            person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
-        
-        # print("Person", person.per_li)
-        # print("prev_per", person.prev_per)
-        # print("Phone", bike.pho_li)
-        # print("phone", pho_li)
+            # person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf)
+            bike_fin.detect_bike(img0, xyxy, detect_name, draw_color, detect_conf)
     
-    # print("Vector", person.track_person())
     sec = curTime - prevTime
     prevTime = curTime
     fps = 1 / (sec)
@@ -94,7 +91,3 @@ while cap.isOpened():
     k = cv2.waitKey(30) & 0xff
     if k == 27:
         break
-
-
-
-

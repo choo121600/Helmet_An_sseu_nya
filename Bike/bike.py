@@ -8,7 +8,7 @@ from utils.general import check_img_size, non_max_suppression, scale_coords
 from utils.plots2 import plot_one_box
 from utils.torch_utils import select_device
 import imutils
-import time # time 라이브러리
+import time
 from settings import *
 
 prev_pho = []
