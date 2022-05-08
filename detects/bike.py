@@ -10,35 +10,33 @@ from utils.torch_utils import select_device
 import imutils
 import time
 from settings import *
-from Person.person_fin import Person
 
 prev_bike = []
-class Bike_fin:
+class Bike:
     def __init__(self):
-        self.state = "Stop"
+        self.bike_state = "Stop"
         self.bike_li = []
-        self.person = Person()
+        self.bike_x_li = []
+        self.bike_y_li = []
 
-    def detect_bike(self, img0, xyxy, detect_name, draw_color, detect_conf):
+    def detect_bike(self, img0, xyxy, detect_name, draw_color):
         global prev_bike
-        if detect_name == 'cell bikene':
+        if detect_name == 'Autobike' or detect_name == 'Bicycle':
             bi_c1, bi_c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
+            bi_xmid, bi_ymid = bi_c1[0] + (bi_c2[0] - bi_c1[0]) / 2, bi_c1[1] + (bi_c2[0] - bi_c1[0]) / 2
             bi_x1, bi_x2 = bi_c1[0], bi_c2[0]
-            self.bike_li.append([bi_x1, bi_x2])
+            bi_y1, bi_y2 = bi_c1[1], bi_c2[1]
+            self.bike_x_li.append([bi_x1, bi_x2])
+            self.bike_y_li.append([bi_y1, bi_y2])
+            self.bike_li.append([bi_xmid, bi_ymid])
 
             # Check Bike is moving
             if prev_bike != []:
                 for bike in self.bike_li:
                     for prev in prev_bike:
                         if TRACKING_SPEED[0] < abs(prev[0] - bike[0]) < TRACKING_SPEED[1] and TRACKING_SPEED[0] < abs(prev[1] - bike[1]) < TRACKING_SPEED[1]:
-                            self.state = "Move"
+                            self.bike_state = "Move"
             prev_bike = self.bike_li
 
-            if self.state == "Move":
-                label = detect_name +" "+ str(round(detect_conf, 2)) + self.state
-                plot_one_box(xyxy, img0, label=label, color=draw_color, line_thickness=3)
-                self.person.detect_person(img0, xyxy, detect_name, draw_color, detect_conf, self.bike_li)
-                # self.track_bike()
-            else:
-                label = detect_name +" "+ str(round(detect_conf, 2)) + self.state
-                plot_one_box(xyxy, img0, label=label, color=draw_color, line_thickness=3)
+            label = "Bike "+ self.bike_state
+            plot_one_box(xyxy, img0, label=label, color=draw_color, line_thickness=3)
