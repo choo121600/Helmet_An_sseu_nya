@@ -19,9 +19,9 @@ class Check:
         self.helmet = Helmet()
         self.bike = Bike()
         self.person = Person()
-        self.img_cnt = 0
 
     def check_helmet(self, img, bike_state, bike_x_li, bike_y_li, helmet_li, sec):
+        global IMG_CNT
         if bike_state == "Move":
             if len(helmet_li) > 0:
                 for bike_x in bike_x_li:
@@ -30,16 +30,16 @@ class Check:
                             print("Pass")
                             break
                     if round(sec) % 2 == 0:
-                        self.img_cnt += 1
-                        cv2.imwrite("./img/helmet{}.jpg".format(self.img_cnt), img)
+                        IMG_CNT += 1
+                        print(IMG_CNT)
+                        cv2.imwrite("./img/helmet{}.jpg".format(IMG_CNT), img)
                         print("No helmet")
             else:
                 if round(sec) % 2 == 0:
-                    self.img_cnt += 1
-                    cv2.imwrite("./img/helmet{}.jpg".format(self.img_cnt), img)
-                    print("No helmet")
-
-
+                    IMG_CNT += 1
+                    print()
+                    cv2.imwrite("./img/helmet{}.jpg".format(IMG_CNT), img)
+                    print("No helmet total: {}".format(IMG_CNT))
 
     def update(self, img0, xyxy, detect_name, draw_color, sec):
         self.bike.detect_bike(img0, xyxy, detect_name, draw_color)

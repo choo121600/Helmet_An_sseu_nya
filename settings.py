@@ -17,6 +17,8 @@ IOU_THRES = 0.45
 CLASSES = None
 AGNOSTIC_NMS = False
 TRACKING_SPEED = (1, 50)
+IMG_CNT = 0
+
 
 source, weights, imgsz = SOURCE, WEIGHTS, IMG_SIZE
 device = select_device(DEVICE)
