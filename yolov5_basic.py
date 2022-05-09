@@ -18,6 +18,9 @@ print(bc.OKGREEN + MESSAGE + bc.ENDC)
 
 cap= cv2.VideoCapture(VIEDO)
 prevTime = 0
+
+timer = 0
+
 while cap.isOpened():
     check = Check()
     curTime = time.time()
@@ -57,9 +60,10 @@ while cap.isOpened():
             # detect_conf = float(conf)
             # label = detect_name
             # plot_one_box(xyxy, img0, label=label, color=draw_color, line_thickness=3)
-            check.update(img0, xyxy, detect_name, draw_color)
+            check.update(img0, xyxy, detect_name, draw_color, timer)
     sec = curTime - prevTime
     prevTime = curTime
+    timer += sec
     fps = 1 / (sec)
     str = "FPS : %0.1f" % fps
     cv2.putText(img0, str, (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))

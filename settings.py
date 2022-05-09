@@ -5,7 +5,7 @@ from utils.general import check_img_size, non_max_suppression, scale_coords
 from utils.plots2 import plot_one_box
 from utils.torch_utils import select_device
 
-VIEDO = './video/autobike.mp4'
+VIEDO = './video/autobike1.mp4'
 
 SOURCE = 'yolo Object Detection'
 WEIGHTS = 'last_5n.pt'
